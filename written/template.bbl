@@ -1,0 +1,157 @@
+\begin{thebibliography}{10}
+\providecommand{\url}[1]{{#1}}
+\providecommand{\urlprefix}{URL }
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{DOI~\discretionary{}{}{}#1}\else
+  \providecommand{\doi}{DOI~\discretionary{}{}{}\begingroup
+  \urlstyle{rm}\Url}\fi
+
+\bibitem{roadmapForIntelligentSystems}
+{Roadmap for Intelligent Systems in Aerospace} (2016)
+
+\bibitem{angelov2012sense}
+Angelov, P.: Sense and avoid in UAS: research and applications.
+\newblock John Wiley \& Sons (2012)
+
+\bibitem{boser1992training}
+Boser, B.E., Guyon, I.M., Vapnik, V.N.: A training algorithm for optimal margin
+  classifiers.
+\newblock In: Proceedings of the fifth annual workshop on Computational
+  learning theory, pp. 144--152. ACM (1992)
+
+\bibitem{brisset2006paparazzi}
+Brisset, P., Drouin, A., Gorraz, M., Huard, P.S., Tyler, J.: The paparazzi
+  solution.
+\newblock In: MAV 2006, 2nd US-European competition and workshop on micro air
+  vehicles, pp. pp--xxxx (2006)
+
+\bibitem{chow1984analytical}
+Chow, E., Willsky, A.: Analytical redundancy and the design of robust failure
+  detection systems.
+\newblock IEEE Transactions on Automatic control \textbf{29}(7), 603--614
+  (1984)
+
+\bibitem{ducard2009fault}
+Ducard, G.J.: Fault-tolerant flight control and guidance systems: Practical
+  methods for small unmanned aerial vehicles.
+\newblock Springer Science \& Business Media (2009)
+
+\bibitem{etherington2017quantifying}
+Etherington, T.J., Kramer, L.J., Kennedy, K.D., Bailey, R.E., Last, M.C.:
+  Quantifying pilot contribution to flight safety during dual generator
+  failure.
+\newblock In: Digital Avionics Systems Conference (DASC), 2017 IEEE/AIAA 36th,
+  pp. 1--11. IEEE (2017)
+
+\bibitem{EASAopinion2018}
+{Introduction of a regulatory framework for the operation of unmanned aircraft
+  systems in the `open' and `specific' categories} (2018)
+
+\bibitem{verificationAdaptiveSystems}
+{Verification of Adaptive Systems} (2016)
+
+\bibitem{gui2002fault}
+Gui, W.h., Liu, X.y.: Fault diagnosis technologies based on artificial
+  intelligence for complex process.
+\newblock Basic Automation \textbf{4}, 000 (2002)
+
+\bibitem{gunn1998support}
+Gunn, S.R., et~al.: Support vector machines for classification and regression.
+\newblock ISIS technical report \textbf{14}, 85--86 (1998)
+
+\bibitem{hagenblad2004comparison}
+Hagenblad, A., Gustafsson, F., Klein, I.: A comparison of two methods for
+  stochastic fault detection: the parity space approach and principal component
+  analysis (2004)
+
+\bibitem{hajiyev2005sensor}
+Hajiyev, C., Caliskan, F.: Sensor and control surface/actuator failure
+  detection and isolation applied to f-16 flight dynamic.
+\newblock Aircraft Engineering and aerospace technology \textbf{77}(2),
+  152--160 (2005)
+
+\bibitem{isermann2006fault}
+Isermann, R.: Fault-diagnosis systems: an introduction from fault detection to
+  fault tolerance.
+\newblock Springer Science \& Business Media (2006)
+
+\bibitem{isermann1997trends}
+Isermann, R., Ball{\'e}, P.: Trends in the application of model-based fault
+  detection and diagnosis of technical processes.
+\newblock Control engineering practice \textbf{5}(5), 709--719 (1997)
+
+\bibitem{SORA}
+{JARUS guidelines on Specific Operations Risk Assessment(SORA)} (2017)
+
+\bibitem{laouti2011support}
+Laouti, N., Sheibat-Othman, N., Othman, S.: Support vector machines for fault
+  detection in wind turbines.
+\newblock IFAC Proceedings Volumes \textbf{44}(1), 7067--7072 (2011)
+
+\bibitem{li2016data}
+Li, M., Li, G., Zhong, M.: A data driven fault detection and isolation scheme
+  for uav flight control system.
+\newblock In: Control Conference (CCC), 2016 35th Chinese, pp. 6778--6783. TCCT
+  (2016)
+
+\bibitem{melody2001h}
+Melody, J.W., Hillbrand, T., Ba{\c{s}}ar, T., Perkins, W.R.: {$H_{\infty}$}
+  parameter identification for inflight detection of aircraft icing: The
+  time-varying case.
+\newblock Control Engineering Practice \textbf{9}(12), 1327--1335 (2001)
+
+\bibitem{platt1998sequential}
+Platt, J.: Sequential minimal optimization: A fast algorithm for training
+  support vector machines  (1998)
+
+\bibitem{platt1999probabilistic}
+Platt, J., et~al.: Probabilistic outputs for support vector machines and
+  comparisons to regularized likelihood methods.
+\newblock Advances in large margin classifiers \textbf{10}(3), 61--74 (1999)
+
+\bibitem{rotstein2006fault}
+Rotstein, H., Ingvalson, R., Keviczky, T., Balas, G.J.: Fault-detection design
+  for uninhabited aerial vehicles.
+\newblock Journal of guidance, control, and dynamics \textbf{29}(5), 1051--1060
+  (2006)
+
+\bibitem{schlechtingen2011comparative}
+Schlechtingen, M., Santos, I.F.: Comparative analysis of neural network and
+  regression based condition monitoring approaches for wind turbine fault
+  detection.
+\newblock Mechanical systems and signal processing \textbf{25}(5), 1849--1875
+  (2011)
+
+\bibitem{sharma2007fault}
+Sharma, R., Aldeen, M.: Fault detection in nonlinear systems with unknown
+  inputs using sliding mode observer.
+\newblock In: 2007 American Control Conference, pp. 432--437. IEEE (2007)
+
+\bibitem{dataCentricDiagOffline}
+Stutz, J.: On data-centric diagnosis of aircraft systems.
+\newblock IEEE Transactions on Systems, Man and Cybernetics  (2010)
+
+\bibitem{sun2005improved}
+Sun, X., Marquez, H.J., Chen, T., Riaz, M.: An improved pca method with
+  application to boiler leak detection.
+\newblock ISA transactions \textbf{44}(3), 379--397 (2005)
+
+\bibitem{undertaking2017u}
+Undertaking, S.J.: U-space blueprint.
+\newblock web page, June \textbf{9} (2017)
+
+\bibitem{vapnik1995nature}
+Vapnik, V.: The nature of statistical learning theory springer new york google
+  scholar  (1995)
+
+\bibitem{vapnik1964note}
+Vapnik, V., Chervonenkis, A.: A note on one class of perceptrons.
+\newblock Automation and remote control \textbf{25}(1), 103 (1964)
+
+\bibitem{yin2014study}
+Yin, S., Gao, X., Karimi, H.R., Zhu, X.: Study on support vector machine-based
+  fault detection in tennessee eastman process.
+\newblock In: Abstract and Applied Analysis, vol. 2014. Hindawi Publishing
+  Corporation (2014)
+
+\end{thebibliography}

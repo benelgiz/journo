@@ -1,0 +1,637 @@
+%%%%%%%%%%%%%%%%%%%%%%% file template.tex %%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% This is a general template file for the LaTeX package SVJour3
+% for Springer journals.          Springer Heidelberg 2010/09/16
+%
+% Copy it to a new file with a new name and use it as the basis
+% for your article. Delete % signs as needed.
+%
+% This template includes a few options for different layouts and
+% content for various journals. Please consult a previous issue of
+% your journal as needed.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% First comes an example EPS file -- just ignore it and
+% proceed on the \documentclass line
+% your LaTeX will extract the file if required
+\begin{filecontents*}{example.eps}
+%!PS-Adobe-3.0 EPSF-3.0
+%%BoundingBox: 19 19 221 221
+%%CreationDate: Mon Sep 29 1997
+%%Creator: programmed by hand (JK)
+%%EndComments
+gsave
+newpath
+  20 20 moveto
+  20 220 lineto
+  220 220 lineto
+  220 20 lineto
+closepath
+2 setlinewidth
+gsave
+  .4 setgray fill
+grestore
+stroke
+grestore
+\end{filecontents*}
+%
+\RequirePackage{fix-cm}
+%
+%\documentclass{svjour3}                     % onecolumn (standard format)
+%\documentclass[smallcondensed]{svjour3}     % onecolumn (ditto)
+%\documentclass[smallextended]{svjour3}       % onecolumn (second format)
+\documentclass[twocolumn]{svjour3}          % twocolumn
+%
+\smartqed  % flush right qed marks, e.g. at end of proof
+%
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{physics}
+\usepackage{bm}             % Bold math symbols
+%\usepackage{array}
+
+%
+% \usepackage{mathptmx}      % use Times fonts if available on your TeX system
+%
+% insert here the call for the packages your document requires
+%\usepackage{latexsym}
+% etc.
+%
+% please place your own definitions here and don't use \def but
+% \newcommand{}{}
+%
+% Insert the name of "your journal" with
+% \journalname{myjournal}
+%
+\begin{document}
+
+\title{Fault diagnosis for UAVs using flight data via machine learning%\thanks{Grants or other notes
+%about the article that should go on the front page should be
+%placed here. General acknowledgments should be placed at the end of the article.}
+}
+%\subtitle{Do you have a subtitle?\\ If so, write it here}
+
+%\titlerunning{Short form of title}        % if too long for running head
+
+\author{Elgiz Baskaya         \and
+          Murat Bronz \and
+        Daniel Delahaye%etc.
+}
+
+%\authorrunning{Short form of author list} % if too long for running head
+
+\institute{E. Baskaya \at
+              ENGIE Ineo - Groupe ADP - SAFRAN RPAS Chair \\
+              ENAC, 7, avenue Edouard Belin, 31400, Toulouse, France \\
+              Tel.: +33-616460022\\
+              \email{benelgiz@gmail.com}           %  \\
+%             \emph{Present address:} of F. Author  %  if needed
+           \and
+           M. Bronz \at
+           UAS Lab, Laboratoire MAIAA \\
+           ENAC, 7, avenue Edouard Belin, 31400, Toulouse, France \\
+            \email{murat.bronz@enac.fr}  
+           \and
+           D. Delahaye \at
+           Laboratoire MAIAA \\
+           ENAC, 7, avenue Edouard Belin, 31400, Toulouse, France \\
+            \email{deniel.delahaye@enac.fr}  
+}
+
+\date{Received: date / Accepted: date}
+% The correct dates will be entered by the editor
+
+
+\maketitle
+
+\begin{abstract}
+
+The new era of small UAVs populating the airspace introduces many safety concerns due to the lack of a pilot onboard and less accurate nature of the sensors. This necessitates intelligent approaches to address the emergency situations that will be inevitable for all classes of UAVs defined by EASA. The hardware limitations for these small vehicles point the utilization of analytical redundancy rather than the usual practice of hardware redundancy in manned aviation. In the course of this study, machine learning practices are implemented to diagnose faults on a small fixed-wing UAV to avoid the burden of accurate modeling needed in model-based fault diagnosis. A supervised classification method, SVM (Support Vector Machines) is used to classify the faults. The attributes used to diagnose the faults are gyro and accelerometer measurements. This work only addresses the faults in the control surfaces of a UAV. More specifically, the faults considered are the control surface stuck at an angle and loss of effectiveness. Since SVM is a supervised machine learning algorithm, labeled data is needed to accomplish the training of the classifier. For that purpose, real flights have been arranged to generate faulty flight data by manipulating the open source autopilot PAPARAZZI. All data and the code available in code sharing and versioning system GIT.
+For now, the training is held offline due to the need for labeled data and computational burden of the tuning phase of the classifiers. The results show that over the flight data, SVM yields accurate results on classification of control surface stuck fault. For the loss of efficiency fault, some feature engineering, involving the addition of past measurements is needed to attain satisfactory classification performance.
+\keywords{First keyword \and Second keyword \and More}
+% \PACS{PACS code1 \and PACS code2 \and more}
+% \subclass{MSC code1 \and MSC code2 \and more}
+\end{abstract}
+
+\section{Introduction}
+\label{intro}
+{\color{red} 
+The cost effectiveness and reachability of COTS elements, shrinking size of electronics serve as a perfect environment for small flying vehicles to emerge. This accelerating trend towards small but capable flying vehicles is pushing the limits of both hardware and software potentials of industry and academia. Increasing usage of these vehicles for a variety of missions pushes a further liability to secure the flight. 
+
+To achieve a safe flight is not an easy task considering the unknowns of the systems hardware, environment and possible system faults and failures to emerge. Also, increasing demand on cost effective systems, resulting in the smaller sensors and actuators with less accuracy, impose the software to achieve even more. The expectation that UAVs should be less expensive than their manned counterparts might have a hit on reliability of the system. Cost saving measures other than the need to support a pilot/crew on board or decrement in size would probably lead to decrease in system reliability.
+
+Systems are often susceptible to faults of different nature. Existing irregularities in sensors, actuators, or controller could be amplified due to the control system design and lead to failures. A fault could be hidden thanks to the control action \cite{ducard2009fault}.
+
+The widely used method to increase reliability is to use more reliable components and/or hardware redundancy. Both requires an increase in the cost of the UAS conflicting one of the main reasons of UAS design itself band consumer expectations \cite{angelov2012sense}. To offer solutions for all different foreseen categories of airspace, a variety of approaches should be considered. While hardware redundancy could cope with the failure situations of UAVs in the certified airspace, it may not be suitable for UAVs in open or some subsets of specific categories due to budget constraints. Analytical redundancy is another solution, may be not as effective and simple as hardware redundancy, but relies on the design of intelligent methods to utilize every bit of information on board aircraft wisely to deal with the instances.  
+
+}
+
+\section{Fault Detection and Diagnosis}
+\label{fdd}
+{\color{red} 
+
+TYPES of FAULTS
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.45\textwidth]{figures/actuatorFaults}    % The printed column width is 8.4 cm.
+\caption{Common actuator faults \cite{ducard2009fault}} 
+\label{fig:actuatorFaults}
+\end{center}
+\end{figure}
+
+A common categorization of FTCS is passive and active FTCS. In passive FTCS, the flight controller is designed in such a way to accommodate not only the disturbances but also the faults. Active FTCS first distinguishes the fault via fault detection and diagnosis module and then switch between the designed controllers specific to the fault case or design a new one online \cite{angelov2012sense}. While active FTCS requires more tools to handle faults as seen in Fig.~\ref{fig:FTCmethods}, for faults not predicted and not counted for during the design of the robust controller, this method most probably fails. 
+Even with a long list of available methods, aerospace industry has not implemented FTC widely, except some space systems, due to the evolving nature of the methods, the tricks coming with the nonlinear nature of the problem, design complexity and high possibility of wrong alarms in case of large disturbances and/or modeling uncertainties. So the already carried reliability measures concerning the hardware redundancy is now the preferred way because of its ease and maturity being implemented on various critical missions with considering human lives.
+
+FDD is handled in two main steps; fault detection and fault diagnosis. Fault diagnosis encapsulates fault isolation and fault identification. The methods for detection and diagnosis are investigated for their frequency of utilization separately for sensor, actuator, process and controller faults in \cite{isermann1997trends}. FDD should not only be sensitive to the faults but also robust to the model uncertainties and external disturbances.
+
+Two distinct options to proceed in analytical redundancy are the model based approaches and data-driven approaches. They form the two ends of a continuous solution set line, so utilizing them in a combination might end up with better solutions. Model based fault diagnosis highlights the components of a system and the connections in-between, and their corresponding fault modes. Data driven fault diagnosis rely on the observational data and prefers dense, redundant and with a  frequency larger than the failure rate.
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=8.3cm]{figures/FTCmethods}    % The printed column width is 8.4 cm.
+\caption{Variations of fault tolerant control systems } 
+\label{fig:FTCmethods}
+\end{center}
+\end{figure}
+
+
+\paragraph{Model-based methods} In model based approaches, relations between measurements and estimated states are exploited to detect possible dysfunction. The most common ways to implement a model based approach is to estimate the states, estimate the model parameters, or parity-space. The accuracy of the results depend on the type of faults (additive or multiplicative). Additive faults affects the variables of the process by a summation whereas the multiplicative faults by a multiplication.  When only output signal can be measured, signal model based methods can be employed for fault detection such as Bandpass filters, Spectral analysis(FFT) and maximum entropy estimation. For the case, both the input and output signals are available, the utilized methods for fault detection are called the process based methods: State and output observers(estimators), Parity equations and Identification and parameter estimation. They generate residuals for state variables or output variables. When previous works investigated, it is concluded that the most widely used technique for sensor and actuator faults is the state and output observers (estimators) and for process faults, identification and parameter estimation \cite{isermann1997trends}.
+
+The output of the model based fault detection methods is the stochastic behaviour with mean values and variances. With the use of change detection methods, deviations from the normal behavior can be detected. For that purpose, three available methods considered are, mean and variance estimation, likelihood-ratio-test and Bayes decision, run-sum test and two-probe t-test. Fault detection is only supported by simple threshold logic or hypothesis testing in most of the applications \cite{isermann1997trends}.
+
+A bunch of studies discovers the band of different approaches for model-based fault detection. Detecting sensor and actuator faults via state estimation, utilizing an EKF is applied to a F-16 model in \cite{hajiyev2005sensor}. Parameter identification via $H_{\infty}$ filter is used to indicate icing in \cite{melody2001h}.
+
+A drawback of model-based approaches is that they require accurate model of the aircraft for successful detection. In a small UAV system susceptible to various uncertainties/disturbances and most of the cases does not have an accurate model, leading a model-based approach might fail. And also, a mathematical model of a UAV is constructed within the flight envelope, and does not necessarily describe the possible dynamics invoked by a failure on board.
+
+A way to handle that is to offer solutions to cope with the uncertainties. A fairly old study in 1984, investigates the design problem FDI systems robust to uncertainties within the models. One of the two steps of FDI, two steps being the residual generation and decision-making, is targeted. They offer to handle model uncertainties, by designing a robust residual generation process \cite{chow1984analytical}. Another study deals with model uncertainties by determining the threshold of the residual in a novel way with an application to detect aileron actuator fault \cite{rotstein2006fault}. \cite{sharma2007fault} utilize two cascade sliding mode observers state estimation and fault detection to guarantee staying in sliding manifold in the presence of unknown disturbances and faults. 
+
+\paragraph{Data-Driven methods}Model-based approaches had various successful applications until now, most of them assuming accurate model is available on board. With the new era of UAVs, the airspace is expected to be populated by an abrupt increase in the number of UAVs. The variety of UAVs, expense of accurate modeling practices, the difficulty in modeling the behavior of UAV in case of failures, call for alternative approaches for the quite challenging problem of FDD. The increased efficiency of sensors on board, the increase in the computational capabilities of autopilot processors, and the advances in machine learning techniques in the last decade may offer efficient data-driven solutions to FDD. 
+
+In data driven methods, a detailed knowledge about the internal dynamics of the system is not necessary. The data available is the source of information with regard to the behavior of the system. Supervised learning, which requires to label the fault cases previously in the training data, is usually utilized for data-centric inference of causes. In case of an unlabeled fault, the result is expected as a probability distribution of the available normal modes, identified fault labels and a probable unknown fault. What is needed at that point is to first detect and localize the fault and then to consult domain experts for labeling for further integration of this fault into the diagnosis scheme \cite{dataCentricDiagOffline}.
+
+
+Amidst data driven methods for FDD, such as Neural Networks \cite{schlechtingen2011comparative} and Principal Component Analysis (PCA) \cite{sun2005improved}, Support Vector Machines (SVM) appear more recently in the literature. \cite{gui2002fault} argues artificial intelligence methods for fault detection of complex systems. Comparison between PCA and model based stochastic parity space approaches is given in \cite{hagenblad2004comparison}.
+In \cite{li2016data}, the authors argues to use dynamic PCA since UAV flight controls is a dynamic system itself and DPCA can reflect unknown disturbances, while model-based approaches can only model typical disturbance.  
+
+
+SVM is introduced in 1964 in the statistical learning theory domain and relies on structural risk minimization principle \cite{vapnik1964note}. Although the theory has old roots, its application to classification as a machine learning algorithm is recent and originally offer solutions for two-class classification \cite{boser1992training,vapnik1995nature}.
+SVM's first application as a classifier was mainly on object classification in images and followed by fault detection lately. The use of SVM on fault detection has gained popularity thanks to its improvement in accuracy of detection \cite{laouti2011support}. Application of SVM on fault detection is mostly held in mechanical machinery, such as roller bearings, gear box, turbo pump rotor and sometimes other systems; semi-conductors, refrigeration systems and chemical processes. Its application on complex systems has not been very widely adopted yet and forms the basis of study for our research.}
+
+ \section{Support Vector Machines}
+ 
+{\color{red} SVM is a relatively new approach for classification offering better generalization property thanks to its foundations on the structural risk minimization principle \cite{gunn1998support,yin2014study} while other classifiers usually only minimizes the empirical risk. This advances the capacity of generalization even with a small number of instances by reducing the risk of overfitting for a nicely tuned parameters setting. It can be applied to nonlinear systems and problems offering a vast number of features. Furthermore, taking advantage of convex optimization problems in the solution of SVM models, another attractive reason to use SVM rises as avoidance of global minimas, while Neural Networks is inherently prone to local minimas.
+
+The idea behind SVM is to find an optimal hyperplane that will linearly separate the classes. This is achieved with the introduction of maximum margin concept which is the distance in between the boundaries when they are extended until hitting the first data point as in Fig.~\ref{fig:svmHyperplane}. The points closest to the hyperplane (decision boundary) are called the support vectors and are the representatives of the data sets to be used for the decision process. This helps to decrease the data to handle abruptly, enhancing the ability to cope with the curse of dimensionality and reducing the computational complexity.
+
+SVM has other tricks to deal with not linearly seperable problems such as using kernels to map data into higher dimensional feature spaces where they can be separated with a linear hyperplane.
+ 
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=7cm]{figures/svmHyperplane}    % The printed column width is 8.4 cm.
+\caption{SVM working principle} 
+\label{fig:svmHyperplane}
+\end{center}
+\end{figure}
+
+A binary classifier is used in this work to classify two classes, faulty and nominal. The fault considered in this study is one of the control surface stuck at $0^{\circ}$. SVM being a supervised classification algorithm has two main phases as shown in Fig.~\ref{fig:supervisedLearning}. In the training phase, the model is learned as a fit to the labeled data that is fed to the SVM algorithm. This phase is usually followed with a tuning phase where some of the parameters of SVM is changed and results are compared to have the best fit via cross validation to avoid overfitting. The last phase is the prediction, where for a new instance the classifier predicts if it corresponds to a faulty or nominal condition.
+
+Training data is comprised of labeled data where the label can belong to one of two possible cases. This data set is saved in $\bm{X} \in {\rm I\!R^{m \times n}}  $ where $m,n$ correspond to number of instances and features respectively. The label information corresponding to the measurement instances is also fed to the SVM algorithm during the training phase as output vector $\bm{y} \in \{-1,1\}$. The aim of SVM is to find an optimal hyperplane maximizing the margin by solving the optimization problem for non-linearly separable datasets
+
+\begin{align}
+min_{\gamma,\omega,b} \quad & \frac{1}{2} \norm{\omega}^2 + C \sum\limits_{i = 1}^m \xi_i \\
+s.t. \quad & y^{i}(\omega^T x^(i) + b) \geq 1 - \xi_i, \ i = 1, \cdots, m\\
+ & \xi_i \geq 0, \ i = 1, \cdots, m
+% hic bir sey yazmazsan esitlikleri alt alta hizaliyor canim benim&=alo \\
+% $ tek dolar arasi $ inline denklem
+% $$ cift dolar arasi $$ satir atlayarak ortada denklem
+\end{align}
+
+To avoiding overfitting, which is the main problem of parametric discrimination approaches such as neural networks, parameter $C$ is tuned to result in the optimal fit for the cross validation set. The data set available is first divided to two portions with a percentage of \%20, \%80 where the bigger chunk is the training set and the remaining is the test set. Further, the training set is divided as cross-validation and training sets. The idea to split data is to avoid overfitting. Overfitting means that the models trained being very accurate fit for the data they are trained to but fail to generalize with new inputs resulting in bad prediction performance for the new data. To assess the performance of the classifier trained with the training data is tuned to give a better performance with the cross validation data. And then the final ability of the classifier is tested on the test set. This parameter also tuned for the outliers to generalize the distribution of the data rather than resulting in fine fits for each individual data in the training set. 
+With a satisfactory result of the training \& tuning is followed by the prediction where the classifier predicts if the new measurement data belongs to the faulty or nominal class. The output of the SVM classification is not the probability that the new measurement belongs to one class as is in the traditional classification problems, but directly the class information it belongs to. For investigating the performance of the classifier on the test set, a method \cite{platt1999probabilistic} is used to calculate the posterior probabilities giving the probability that the new measurements belongs to faulty mode. Results shows as in  Fig.~\ref{fig:post_prob} that prober tuning achieves very accurate and instant detection for the drone fault. }
+   
+%\begin{figure*}
+%\begin{center}
+%\includegraphics[width=14cm]{modelSelectionNonVisualizableData}    % The printed column width is 8.4 cm.
+%\caption{Supervised learning basics } 
+%\label{fig:supervisedLearning}
+%\end{center}
+%\end{figure*}
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=9cm]{figures/machineLearningBasics}    % The printed column width is 8.4 cm.
+\caption{Supervised learning basics } 
+\label{fig:supervisedLearning}
+\end{center}
+\end{figure}
+
+\section{Fault detection from real flight data}
+
+\subsection{Injecting faults in flight from Paparazzi GCS}
+
+For the faulty flight data gathering, some modifications to the Paparazzi autopilot was necessary in two main parts : Injecting the faults real-time from GCS, editing the controller so that the sent fault values configures the servos as desired from the GCS. 
+
+\begin{figure*}
+\begin{center}
+\includegraphics[width=1.05\textwidth]{figures/groundStationFaultInj}    % The printed column width is 8.4 cm.
+\caption{Paparazzi groundstation view of fault injection during flight} 
+\label{fig:groundStationFaultInj}
+\end{center}
+\end{figure*}
+
+
+
+For the former part, a slider is added to the ground station to set the fault during flight and set it back to normal flight conditions if necessary. Fig. ~\ref{fig:groundStationFaultInj} shows the GCS view with the fault settings open. This pane can be found under SETTINGS > FAULT as highlighted in pink in the figure. The four row configuration represents from top to bottom, the multiplicative error in the right elevon, the multiplicative error in the left elevon, additive error in the right elevon, and finally the additive error in the left elevon.  The nominal condition where there is no fault, the configurations is  $[\begin{matrix}right & left & right\_offset &left\_offset\end{matrix}] = [\begin{matrix} 1.0 & 1.0 & 0 & 0\end{matrix}]$. 
+This configuration lets the user to realize all types of actuator faults, such as control surface inefficiency or stuck. To generate the fault of right elevon stuck at its nominal position, setting the first slider ($right$) to zero is enough. The generate stuck fault at other positions, $right\_offset$ slider should be changed to desired stuck position while keeping the first slider at zero.  
+
+\begin{figure*}
+\begin{center}
+\includegraphics[width=1.05\textwidth]{figures/paparazziControlModes}    % The printed column width is 8.4 cm.
+\caption{Paparazzi autonomy modes} 
+\label{fig:paparazziControlModes}
+\end{center}
+\end{figure*}
+
+
+For the second part, which is to modify the servo command from the autopilot to the servos, a look at the Paparazzi modes might be helpful. Most of the times, there are three modes for fixed-wings from control perspective: AUTO 1, AUTO 2, MANUAL. In AUTO 1, the pilot is still in the loop and gives the desired pitch and roll values to the controller and the desired elevator and aileron commands are calculated by the autopilot and passed to control allocation where the final desired servo commands are sent to servos as highlighted AUTO 1 in Fig. ~\ref{fig:paparazziControlModes}. In the AUTO 2 mode, there is no need for the pilot since the navigation is also held by the autopilot for a given flight plan. This mode is also given as AUTO 2 in Fig. ~\ref{fig:paparazziControlModes}.
+In MANUAL mode, the pilot gives the desired elevator and aileron commands and desired servo commands are calculated in the autopilot's control allocation phase. So still there is a very low sense of autonomy in the manual phase. 
+
+Flying with faults is a challenge. The risk to crash is increased on purpose, so a back up plan is necessary to recover from faulty situations if the drone seems to be out of control and/or about to crash. For that purpose, the faults are only injected to AUTO modes and MANUAL mode is always free of faults even a fault is given from the ground station. So, when the pilot sees a safety problem during the faulty operation, s/he can switch to MANUAL mode from the remote controller and have the control of the control surfaces free from faults. Depending on the nature of the fault injected, this might be a game changer such as gathering data from control surface stuck fault in which it is sure the drone is going to crash unless an action taken.  This is shown in Fig. ~\ref{fig:paparazziControlModes} with a switch initiated by the pilot's remote control. This figure shows that during the control allocation phase, which is the calculation of the desired servo commands from given desired elevator/aileron commands, faults are injected if the mode is AUTO 1 and AUTO 2 when fault multiplicative or fault additive values are changed from the GCS by the operator while when switched to MANUAL mode, the control allocation do not consider the given fault multiplicative and fault additive. 
+
+Fig. ~\ref{fig:paparazziControlModes}
+
+\begin{figure*}
+\begin{center}
+\includegraphics[width=1.05\textwidth]{figures/faultInjectionPaparazzi}    % The printed column width is 8.4 cm.
+\caption{Switching ability of the pilot via RC, from AUTO modes where faulty signal is applied to MANUAL mode without the faulty signals, if a necessary recovery from a serious fault occurs} 
+\label{fig:paparazziControlModes}
+\end{center}
+\end{figure*}
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.45\textwidth]{figures/zagi}    % The printed column width is 8.4 cm.
+\caption{The flying-wing: ZAGI} 
+\label{fig:objFunc1}
+\end{center}
+\end{figure}
+
+An example of a portion of flight data given as 17\_07\_06\_\_10\_21\_07\_SD.data is given in Fig. ~\ref{fig:dataSettingsNominalFault} and whole file is reachable under https://github.com/benelgiz/
+cureDDrone/tree/master/data/v4\_multiplicativeAdditive\_MURET\_06\_07\_2017. The UAV used is given in Fig.  ZAGIPIC and whole flight was around an hour. The weather was very windy and the safety pilot was Michel Gorraz. 34 different faults are injected. As a broad look at the outcomes, for the additive faults, the effects are not really seen to naked eye. For the control surface stuck faults, even one control surface was stuck, it immediately gets out of control and safety pilot takes the initiative and thanks to the piloting skills, no crashes occurred. For ineffectiveness of control surface faults, where the controller has still an effect but not as efficient as before, error in navigation was observed.  
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.53\textwidth]{figures/dataSettingsNominalFault}    % The printed column width is 8.4 cm.
+\caption{Showing flight data portions corresponding to nominal and two different fault phases of the flight. SETTING message exists only if there is a change in the multiplicative and additive fault parameters via GCS} 
+\label{fig:dataSettingsNominalFault}
+\end{center}
+\end{figure}
+
+Now that the .data file is ready, next is to detect the time stamps at which the faults are injected and then label all the data during this fault interval correspondingly as designated with different colours in Fig. ~\ref{fig:dataSettingsNominalFault}. Since, most of the times there has been more than one fault type generated during flights, another step is to choose which kind of fault is of interest for further investigations. 
+
+The faults or change from fault condition to nominal mode is done via the GCS and there is a corresponding message saved to SD card onboard under SETTINGS. SETTINGS gives multiplicative fault and additive fault values and only appears in the flight data when a value is changed. The value of the SETTINGS corresponding to nominal phase is [1.0 1.0 0.0 0.0] and shown in Fig. ~\ref{fig:flightDataSettings}. It means to multiply the value given by the controller by 1 and add 0, so does not change the values given by the autopilot. As soon as the value changed in the GCS a new settings value is saved to the file (Shown with arrows in Fig. ~\ref{fig:dataSettingsNominalFault}). 
+
+When the actuators are healthy, actual control input signal will be equal to the given input signal. In case of a fault the actual signal can be modeled as
+
+\begin{equation}
+\bm{u}\left(t\right)= \bm{E}\bm{u}_c + u_f
+\end{equation}
+
+where $\bm{u}_c $ is the desired control signal, $E = diag(e_1, e_2, e_3)$ is the effectiveness of the actuators where $0 \leq e_i \leq 1 $ with $(i = 1, 2 ,3)$ and $u_f$ additive actuator fault. This model makes it possible to simulate all four types of actuator faults shown in Fig.~\ref{fig:actuatorFaults}.
+
+To find the indexes where the nominal and faulty data starts and ends, the values of the SETTINGS message is investigated. So when there is a SETTINGS message in the flight, it should be either a FAULT generation or going back to NOMINAL condition after a fault. If the message contains the nominal settings values ([1.0 1.0 0.0 0.0]) it means that until the following SETTINGS of not equal to this value, there is a fault. For that the SETTINGS messages equal to [1.0 1.0 0.0 0.0] is selected as the nominal condition start index. And a previous index before next SETTINGS message is the last index of this NOMINAL phase. The matrix holding the start and end index for the nominal phases are saved as \textit{nominal\_start\_stop}  shown in Table~\ref{arm:tableNominalindexes}
+where the first row corresponds to start index of each nominal set and second row corresponds to the last index of the corresponding as nominal phase. For the fault indexes a similar approach is followed except that SETTINGS messages selected are the ones which is different than  [1.0 1.0 0.0 0.0]. An example can be seen in Fig. ~\ref{fig:settingsStuckFault} which also corresponds to the Fault \#23 in Fig. ~\ref{fig:dataSettingsNominalFault} (the first line of the fault phase data).
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.6\textwidth]{figures/flightDataSettings}    % The printed column width is 8.4 cm.
+\caption{SETTINGS data saves the multiplicative and additive fault values inserted from the GCS.  [1.0 1.0 0.0 0.0] corresponds to nominal case where no fault is injected} 
+\label{fig:flightDataSettings}
+\end{center}
+\end{figure}
+
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.45\textwidth]{figures/acc_x}    % The printed column width is 8.4 cm.
+\caption{$a_x$ vs $a_y$ feature space for faulty nominal flight data} 
+\label{fig:acc_x}
+\end{center}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.45\textwidth]{figures/acc_x_evenLongerNominal}    % The printed column width is 8.4 cm.
+\caption{$a_x$ vs $a_y$ feature space for faulty nominal flight data} 
+\label{fig:acc_x_evenLongerNominal}
+\end{center}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.45\textwidth]{figures/acc_z}    % The printed column width is 8.4 cm.
+\caption{$a_x$ vs $a_y$ feature space for faulty nominal flight data} 
+\label{fig:acc_z}
+\end{center}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.45\textwidth]{figures/gyro_x}    % The printed column width is 8.4 cm.
+\caption{$a_x$ vs $a_y$ feature space for faulty nominal flight data} 
+\label{fig:funcEval1}
+\end{center}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.45\textwidth]{figures/feat1vsfeat3FaultStuck}    % The printed column width is 8.4 cm.
+\caption{$a_x$ vs $a_z$ feature space for faulty nominal flight data} 
+\label{fig:feat1vsfeat3FaultStuck}
+\end{center}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.45\textwidth]{figures/feat1vsfeat2FaultStuck}    % The printed column width is 8.4 cm.
+\caption{$a_x$ vs $a_y$ feature space for faulty nominal flight data} 
+\label{fig:feat1vsfeat2FaultStuck}
+\end{center}
+\end{figure}
+
+ \section{Classification of fault via SVM}
+
+A binary classifier is used in this work to classify two classes, faulty and nominal. 
+The faults considered in this study is the loss of effectiveness of the control surfaces and and the control surface stuck. 
+Last section explains how the faulty data generated in flight and then labeled on the ground to be fed to the classifier. 
+In this section, the classification of the faults will be explained in detail. 
+
+SVM being a supervised classification algorithm has two main phases as shown in Fig.~\ref{fig:supervisedLearning}: training and prediction. 
+The labeled data set is first divided to two portions with a percentage of \%20, \%80 where the bigger chunk is the training set and the remaining is the test set. 
+Further, the training set is divided as cross-validation and training sets. The idea to split data is to avoid overfitting. 
+Overfitting means that the models trained being very accurate fit for the data they are trained to but fail to generalize with new inputs resulting in bad prediction performance for the new data. 
+
+\subsection{Training of the classifier}
+In the training phase, the model is learned as a fit to the labeled data that is also an input to the SVM algorithm. 
+Training data is comprised of labeled data where the label can belong to one of two possible cases. 
+This data set is saved in $\bm{X} \in {\rm I\!R^{m \times n}}  $ where $m,n$ correspond to number of instances and features respectively. 
+The label information corresponding to the measurement instances is also fed to the SVM algorithm during the training phase as output vector $\bm{y} \in \{-1,1\}$. 
+
+The next step is to normalize the features of the data to make the values of features change with the same order of magnitude. 
+The reason is due to its benefits to the calculation of parameters of the hypothesis via an optimization algorithm and its convergence rate.  
+An important point is to keep that values $\mu_j, s_j$ and may be standard deviation if it is used instead of range $s_j$. 
+During prediction phase, the data first should be scaled with these values attained from learning data.
+If in the hypothesis artificial feature  $x_0 = 1$ is added to the features, do not apply scaling to the artificial feature, but this does not apply to SVM classification.
+
+The aim of SVM is to find an optimal hyperplane maximizing the margin by solving the optimization problem for non-linearly separable datasets. 
+SVM implements the idea of having a confidence in the prediction by using the concept of separating data with large margin. 
+Some other classification methods, such as logistic regression, outputs the probability of a new instance's class, giving the confidence of the prediction as output inherently. 
+On the other hand, SVM does only output if the new instance belongs to a class not necessarily pointing the confidence on this decision. 
+Rather than including this confidence information as an output in terms of probabilities, this information is introduced with the functional and geometric margins. 
+These definitions also serve for mathematically convenience, so that the optimization problem can be represented as a convex optimization problem.
+Furthermore, introducing the Lagrange duality to obtain the dual form of the optimization problem, use of kernels, to work efficiently in higher dimensional spaces, is eased. 
+The dual form also allows to utilize efficient optimization solvers such as Sequential Minimal Optimization (SMO) which is the solver used in this work as well.
+
+Kernels are at the core of efficient SVM classifiers. A kernel, in general is defined as
+
+\begin{equation}
+K (x,z) = {\phi(x)}^T \phi(z)
+\end{equation}
+
+where $\phi$ represents the feature mapping. 
+Straightforward implementation of SVM will end up in linear model, linear decision boundary respectively. 
+And if the system of interest inherently requires a more complicated decision boundary to effectively classify your training data, mapping the original features might be necessary. 
+Usually the original features of the systems are named as attributes while in the the mapped set are called the features. 
+In other words, $\phi$ maps the attributes to the features. Kernels offer various elegant properties such as computational efficiency. 
+Cleverly selected, SVM classifiers can be learn in high dimensional spaces represented by $\phi$ without the need to explicitly find or represent $\phi$, but instead calculating $K(x,z)$, which might be computationally much efficient. 
+In this study, Gaussian Kernel, which corresponds to an infinite dimensional feature mapping, is utilized.
+
+\begin{equation}
+K (x,z) = exp \bigg(-\frac{\Vert x - z \Vert ^ 2}{2 \sigma^2} \bigg)
+\end{equation}
+
+Training
+Explain Kernel Function - Scale
+Solver SMO
+refer to matlab
+
+\subsection{Tuning of the classifier}
+This phase is usually followed with a tuning phase where some of the parameters of SVM is changed and results are compared to have the best fit via cross validation to avoid overfitting. The last phase is the prediction, where for a new instance the classifier predicts if it corresponds to a faulty or nominal condition.
+
+Cross-validation set selection of Matlab utilizes a random selection over the data set thus gives different results during the evaluation of the classifier and makes it difficult to compare different tuning strategies. For that reason, the script has been revised to generate random values from the same seed value to be consistent in comparisons.
+
+
+To avoiding overfitting, which is the main problem of parametric discrimination approaches such as neural networks, parameter $C$ is tuned to result in the optimal fit for the cross validation set. The data set available is first divided to two portions with a percentage of \%20, \%80 where the bigger chunk is the training set and the remaining is the test set. Further, the training set is divided as cross-validation and training sets. The idea to split data is to avoid overfitting. Overfitting means that the models trained being very accurate fit for the data they are trained to but fail to generalize with new inputs resulting in bad prediction performance for the new data. To assess the performance of the classifier trained with the training data is tuned to give a better performance with the cross validation data. And then the final ability of the classifier is tested on the test set. This parameter also tuned for the outliers to generalize the distribution of the data rather than resulting in fine fits for each individual data in the training set. 
+
+With a satisfactory result of the training \& tuning is followed by the prediction where the classifier predicts if the new measurement data belongs to the faulty or nominal class. The output of the SVM classification is not the probability that the new measurement belongs to one class as is in the traditional classification problems, but directly the class information it belongs to. For investigating the performance of the classifier on the test set, a method \cite{platt1999probabilistic} is used to calculate the posterior probabilities giving the probability that the new measurements belongs to faulty mode. Results shows as in  Fig.~\ref{fig:post_prob} that prober tuning achieves very accurate and instant detection for the drone fault. 
+
+
+
+Tuning 
+Box constraint - Regularization
+check matlabs representation
+
+\subsection{Evaluating the classifier}
+
+prediction performance
+Evaluating
+
+kFoldLoss
+margin
+edge
+
+computation time 
+
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.45\textwidth]{figures/objFuncModel}    % The printed column width is 8.4 cm.
+\caption{Objective function for different box parameter and sigma values} 
+\label{fig:objFuncModel}
+\end{center}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.45\textwidth]{figures/objectiveFuncEval}    % The printed column width is 8.4 cm.
+\caption{Objective function for different box parameter and sigma values} 
+\label{fig:objectiveFuncEval}
+\end{center}
+\end{figure}
+
+ \section{Simulation Results}
+
+\subsection{Control surface stuck fault}
+
+Classification of skewed classes
+
+When the data training data for the different classes have a large difference, the classification is given a specific name, skewed class classification. The point is that 
+
+
+precision 
+f1score
+recall
+
+stratified sampling
+
+%
+% For tables use
+\begin{table}
+% table caption is above the table
+\caption{Untuned and tuned via heuristic approach and tuned via Bayesian optimization SVM classification evaluations}
+\label{tab:stuck}       % Give a unique label
+% For LaTeX tables use
+\begin{tabular}{p{2cm}p{1.6cm}p{1.6cm}p{1.8cm}p{1.5cm}}
+\hline\noalign{\smallskip}
+ & Untuned linear kernel & Untuned Gaussian kernel & Tuned heuristic Gaussian kernel & Tuned Bayesian Gaussian kernel\\
+\noalign{\smallskip}\hline\noalign{\smallskip}
+kernel scale & 1 & 1 & 2.1187 & 10.3581 \\
+box constraint & 1 & 1 & 1 & 1323.1 \\
+margin & 10.5927 & 2.0248 & 2.4763 & 5.3004 \\
+edge & 10.5875 & 2.0245 & 2.4761 & 5.3004 \\
+kFoldLoss & 0.2 x $10^{-2}$ & 1.2 x $10^{-3}$& 7.571 x $10^{-4}$ & 1.2 x $10^{-3}$ \\
+precision & 0.76 & 1 & 1 & 0.913 \\
+recall & 0.8261 & 0.8696 & 0.913 & 0.913\\
+f1score & 0.7917 & 0.9302 &0.9545 & 0.913 \\
+comp. time & 3.75 & 3.4s & 5917.5s & 1784.7s \\
+\noalign{\smallskip}\hline
+\end{tabular}
+\end{table}
+
+% For tables use
+\begin{table*}
+% table caption is above the table
+\caption{Untuned and tuned via heuristic approach and tuned via Bayesian optimization SVM classification evaluations}
+\label{tab:1}       % Give a unique label
+% For LaTeX tables use
+\begin{tabular}{p{2cm}p{1.7cm}p{2.3cm}p{3cm}}
+\hline\noalign{\smallskip}
+ & Untuned \ 24 features & Tuned Heuristic 24 features & Tuned Bayesian Opt. 24 features\\
+\noalign{\smallskip}\hline\noalign{\smallskip}
+kernel scale & 1 & 6.0609 & 67.33 \\
+box constraint & 1 & 10 &  47330\\
+margin & 1.9733 & 3.6353 & 5.6484 \\
+edge & 1.9678 & 3.6317 & 5.6404 \\
+kFoldLoss & 5.6 x $10^{-3}$ & 3.44 x $10^{-4}$ & 6.19 x $10^{-4}$ \\
+precision & 1 & 1 & 1 \\
+recall & 0.2632 & 0.8947 & 0.8421\\
+f1score & 0.4167 & 0.9444 & 0.9143 \\
+comp. time & 12.4s & 5581.9s &1205.2s \\
+\noalign{\smallskip}\hline
+\end{tabular}
+\end{table*}
+
+% Second trial for the same number of features
+% For tables use
+\begin{table*}
+% table caption is above the table
+\caption{Untuned and tuned via heuristic approach and tuned via Bayesian optimization SVM classification evaluations}
+\label{tab:1}       % Give a unique label
+% For LaTeX tables use
+\begin{tabular}{p{2cm}p{1.7cm}p{2.3cm}p{2.3cm}p{2.3cm}p{2.3cm}p{2.3cm}}
+\hline\noalign{\smallskip}
+ & Untuned  24 features & Tuned Heuristic 24 features & Tuned Bayesian 24 features & Untuned Heuristic 24 features \%60 test/training & Tuned Heuristic 24 features \%60 test/training & Tuned Bayesian 24 features \%60 test/training\\
+\noalign{\smallskip}\hline\noalign{\smallskip}
+kernel scale & 1 & 5.5154 & 24.9026 & 1 & 4.7577 & 24.9769\\
+box constraint & 1 & 10 & 9172.9 & 1 & 10 & 85.3263\\
+margin & 1.9697 & 4.0001 & 5.8651& 1.9685 & 3.7267 & 4.7728\\
+edge & 1.9680 & 3.99 & 5.8651 & 1.9691 & 3.7270 & 4.7734\\
+kFoldLoss & 5.5 x $10^{-3}$ & 4.8 x $10^{-4}$ & 6.8 x $10^{-4}$ & 5.4 x $10^{-3}$ & 5.5 x $10^{-4}$ & 7.3421 x $10^{-4}$\\
+precision & 1 & 1 & 1 & 1 & 1 & 0.92\\
+recall & 0.1739 & 1 & 1 & 0.22 & 0.96 & 0.92\\
+f1score & 0.2963 & 1 & 1 & 0.3607 & 0.9796 & 0.92\\
+comp. time & 11.3s & 5853.3s & 1061 & 8.5s & 2924.3 & 235.671\\
+\noalign{\smallskip}\hline
+\end{tabular}
+\end{table*}
+
+\subsection{Control surface loss of efficiency fault}
+
+%% For one-column wide figures use
+%\begin{figure}
+%% Use the relevant command to insert your figure file.
+%% For example, with the graphicx package use
+% % \includegraphics{example.eps}
+%% figure caption is below the figure
+%%\caption{Please write your figure caption here}
+%\label{fig:1}       % Give a unique label
+%\end{figure}
+
+%
+%% For two-column wide figures use
+%\begin{figure*}
+%% Use the relevant command to insert your figure file.
+%% For example, with the graphicx package use
+%%  \includegraphics[width=0.75\textwidth]{example.eps}
+%% figure caption is below the figure
+%\caption{Please write your figure caption here}
+%\label{fig:2}       % Give a unique label
+%\end{figure*}
+
+ \section{Conclusion}
+
+
+
+%
+% For tables use
+\begin{table}
+% table caption is above the table
+\caption{Please write your table caption here}
+\label{tab:1}       % Give a unique label
+% For LaTeX tables use
+\begin{tabular}{lll}
+\hline\noalign{\smallskip}
+first & second & third  \\
+\noalign{\smallskip}\hline\noalign{\smallskip}
+number & number & number \\
+number & number & number \\
+\noalign{\smallskip}\hline
+\end{tabular}
+\end{table}
+
+%\section{Section title}
+%\label{sec:1}
+%Text with citations \cite{RefB} and \cite{RefJ}.
+%\subsection{Subsection title}
+%\label{sec:2}
+%as required. Don't forget to give each section
+%and subsection a unique label (see Sect.~\ref{sec:1}).
+%\paragraph{Paragraph headings} Use paragraph headings as needed.
+%\begin{equation}
+%a^2+b^2=c^2
+%\end{equation}
+
+\begin{acknowledgements}
+This work was supported by the ENGIE Ineo - Groupe ADP - SAFRAN RPAS Chair.
+Special thanks to Gautier Hattenberger and Torbjoern Cunis for code modifications to Paparazzi autopilot system, Xavier Paris, Michel Gorraz and Hector Garcia de Marina, and the rest of the ENAC Drone Lab for their help during test flights. Last but not least, we acknowledge Paparazzi community for their contributions to the autopilot system.  
+\end{acknowledgements}
+
+% BibTeX users please use one of
+%\bibliographystyle{spbasic}      % basic style, author-year citations
+%\bibliographystyle{spmpsci}      % mathematics and physical sciences
+%\bibliographystyle{spphys}       % APS-like style for physics
+%\bibliography{}   % name your BibTeX data base
+
+%% Non-BibTeX users please use
+%\begin{thebibliography}{}
+%%
+%% and use \bibitem to create references. Consult the Instructions
+%% for authors for reference list style.
+%%
+%\bibitem{RefJ}
+%% Format for Journal Reference
+%Author, Article title, Journal, Volume, page numbers (year)
+%% Format for books
+%\bibitem{RefB}
+%Author, Book title, page numbers. Publisher, place (year)
+% etc
+%\end{thebibliography}
+
+\end{document}
+% end of file template.tex
+

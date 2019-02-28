@@ -1,0 +1,49 @@
+This is BibTeX, Version 0.99d (TeX Live 2016)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: template.aux
+The style file: spmpsci.bst
+Database file #1: template.bib.bib
+Warning--empty journal in platt1998sequential
+Warning--empty journal in vapnik1995nature
+You've used 30 entries,
+            2946 wiz_defined-function locations,
+            769 strings with 9780 characters,
+and the built_in function-call counts, 20788 in all, are:
+= -- 2456
+> -- 371
+< -- 6
++ -- 256
+- -- 126
+* -- 873
+:= -- 1982
+add.period$ -- 28
+call.type$ -- 30
+change.case$ -- 164
+chr.to.int$ -- 0
+cite$ -- 32
+duplicate$ -- 2350
+empty$ -- 1420
+format.name$ -- 145
+if$ -- 4366
+int.to.chr$ -- 0
+int.to.str$ -- 30
+missing$ -- 265
+newline$ -- 121
+num.names$ -- 52
+pop$ -- 891
+preamble$ -- 1
+purify$ -- 125
+quote$ -- 0
+skip$ -- 1274
+stack$ -- 0
+substring$ -- 977
+swap$ -- 1905
+text.length$ -- 6
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 114
+warning$ -- 2
+while$ -- 106
+width$ -- 32
+write$ -- 282
+(There were 2 warnings)

@@ -1,0 +1,130 @@
+\relax 
+\citation{undertaking2017u}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}}
+\newlabel{intro}{{1}{1}}
+\citation{SORA}
+\citation{EASAopinion2018}
+\citation{isermann2006fault}
+\citation{etherington2017quantifying}
+\citation{angelov2012sense}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Fault Detection and Diagnosis}{2}}
+\newlabel{fdd}{{2}{2}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Variations of fault tolerant control systems }}{2}}
+\newlabel{fig:FTCmethods}{{1}{2}}
+\citation{isermann1997trends}
+\citation{hajiyev2005sensor}
+\citation{melody2001h}
+\citation{chow1984analytical}
+\citation{rotstein2006fault}
+\citation{sharma2007fault}
+\citation{dataCentricDiagOffline}
+\citation{roadmapForIntelligentSystems,verificationAdaptiveSystems}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Model based approaches}{3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Data-Driven methods}{3}}
+\citation{schlechtingen2011comparative}
+\citation{sun2005improved}
+\citation{gui2002fault}
+\citation{hagenblad2004comparison}
+\citation{li2016data}
+\citation{vapnik1964note}
+\citation{boser1992training,vapnik1995nature}
+\citation{laouti2011support}
+\citation{gunn1998support,yin2014study}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces SVM working principle}}{4}}
+\newlabel{fig:svmHyperplane}{{2}{4}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Supervised learning is achieved in two steps: \emph  {Training Phase} in which the model parameters are calculated given labeled data and \emph  {Prediction Phase} in which the label is predicted for a new input using the trained model.}}{4}}
+\newlabel{fig:supervisedLearning}{{3}{4}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Support Vector Machines}{4}}
+\citation{platt1999probabilistic}
+\citation{brisset2006paparazzi}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Fault detection from real flight data}{5}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Injecting faults realtime from \emph  {Paparazzi} ground control station (GCS)}{5}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces View of fault injection tool in Paparazzi ground control station view of in during flight}}{6}}
+\newlabel{fig:groundStationFaultInj}{{4}{6}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces \emph  {Paparazzi} autonomy modes}}{6}}
+\newlabel{fig:paparazziControlModes}{{5}{6}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Modifications to \emph  {Paparazzi} autopilot controls to inject faults during flight}{6}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Modifications on the control modes of \emph  {Paparazzi} autopilot}}{7}}
+\newlabel{fig:faultInjectionPaparazzi}{{6}{7}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Post-processing of data after the flight}{7}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces The flying-wing: \emph  {ZAGI}}}{7}}
+\newlabel{fig:zagi}{{7}{7}}
+\citation{ducard2009fault}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces SETTINGS data saves the multiplicative and additive fault values inserted from the GCS. [1.0 1.0 0.0 0.0] corresponds to nominal case where no fault is injected}}{8}}
+\newlabel{fig:flightDataSettings}{{8}{8}}
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces A small part of the flight data corresponding to nominal and two different fault phases of the flight. \emph  {Settings} message exists only if there is a change in the multiplicative and additive fault parameters via GCS}}{8}}
+\newlabel{fig:dataSettingsNominalFault}{{9}{8}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Classification of fault via SVM}{8}}
+\citation{platt1998sequential}
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Common actuator faults \cite  {ducard2009fault}}}{9}}
+\newlabel{fig:actuatorFaults}{{10}{9}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Training of the classifier}{9}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Tuning of the classifier}{9}}
+\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Convergence of minimum objective function}}{10}}
+\newlabel{fig:objectiveFuncEval}{{11}{10}}
+\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces Objective function values for different box parameter and sigma values}}{10}}
+\newlabel{fig:objFuncModel}{{12}{10}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Evaluating the classifier}{10}}
+\newlabel{evalClassifier}{{5.3}{10}}
+\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces Confusion matrix}}{11}}
+\newlabel{fig:confusionMatrix}{{13}{11}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Results from real flight}{11}}
+\@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces Accelerometer readings along $x$-direction during flight interval just before control surface stuck (nominal, represented with blue) and during control surface stuck at $0\ensuremath  {^\circ }$ until the safety pilot's intervention}}{12}}
+\newlabel{fig:acc_x}{{14}{12}}
+\@writefile{lof}{\contentsline {figure}{\numberline {15}{\ignorespaces Accelerometer readings along $x$-direction during flight interval before control surface stuck (nominal, represented with blue) and during control surface stuck at $0\ensuremath  {^\circ }$ until the safety pilot's intervention}}{12}}
+\newlabel{fig:acc_x_evenLongerNominal}{{15}{12}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Control surface stuck fault}{12}}
+\@writefile{lof}{\contentsline {figure}{\numberline {16}{\ignorespaces Accelerometer measurements along z direction $a_z$ for faulty and nominal flight data}}{12}}
+\newlabel{fig:acc_z}{{16}{12}}
+\@writefile{lof}{\contentsline {figure}{\numberline {17}{\ignorespaces Angular velocity $w_x$ for faulty nominal flight data}}{12}}
+\newlabel{fig:gyro_x}{{17}{12}}
+\@writefile{lof}{\contentsline {figure}{\numberline {18}{\ignorespaces $a_x$ vs $a_z$ feature space for faulty nominal flight data}}{12}}
+\newlabel{fig:feat1vsfeat3FaultStuck}{{18}{12}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Untuned and tuned via heuristic approach and tuned via Bayesian optimization SVM classification evaluations}}{13}}
+\newlabel{tab:stuck}{{1}{13}}
+\@writefile{lof}{\contentsline {figure}{\numberline {19}{\ignorespaces $a_x$ vs $a_y$ feature space for faulty nominal flight data}}{13}}
+\newlabel{fig:feat1vsfeat2FaultStuck}{{19}{13}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Untuned and tuned via heuristic approach and tuned via Bayesian optimization SVM classification evaluations}}{14}}
+\newlabel{tab:contSurfStuckAddedFeat}{{2}{14}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Untuned and tuned via heuristic approach and tuned via Bayesian optimization SVM classification evaluations}}{14}}
+\newlabel{tab:contSurfStuckAddedFeatDiffPercentage}{{3}{14}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Control surface loss of efficiency fault}{14}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces \%10 and \%40 Loss of efficiency fault in left elevon classification results with Gaussian kernel}}{15}}
+\newlabel{tab:loe10_40}{{4}{15}}
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces \%40 Loss of efficiency fault in both elevon classification results with Gaussian kernel for two different number of nominal data sets}}{15}}
+\newlabel{tab:loe40_decreasedNumNomMeas}{{5}{15}}
+\bibstyle{spmpsci}
+\bibdata{template.bib}
+\bibcite{roadmapForIntelligentSystems}{1}
+\bibcite{angelov2012sense}{2}
+\bibcite{boser1992training}{3}
+\bibcite{brisset2006paparazzi}{4}
+\bibcite{chow1984analytical}{5}
+\bibcite{ducard2009fault}{6}
+\bibcite{etherington2017quantifying}{7}
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces \%40 Loss of efficiency fault in left elevon classification results with Gaussian kernel for 24 - 120 - 300 features cases}}{16}}
+\newlabel{tab:loe40_featureAddition}{{6}{16}}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Conclusion}{16}}
+\bibcite{EASAopinion2018}{8}
+\bibcite{verificationAdaptiveSystems}{9}
+\bibcite{gui2002fault}{10}
+\bibcite{gunn1998support}{11}
+\bibcite{hagenblad2004comparison}{12}
+\bibcite{hajiyev2005sensor}{13}
+\bibcite{isermann2006fault}{14}
+\bibcite{isermann1997trends}{15}
+\bibcite{SORA}{16}
+\bibcite{laouti2011support}{17}
+\bibcite{li2016data}{18}
+\bibcite{melody2001h}{19}
+\bibcite{platt1998sequential}{20}
+\bibcite{platt1999probabilistic}{21}
+\bibcite{rotstein2006fault}{22}
+\bibcite{schlechtingen2011comparative}{23}
+\bibcite{sharma2007fault}{24}
+\bibcite{dataCentricDiagOffline}{25}
+\bibcite{sun2005improved}{26}
+\bibcite{undertaking2017u}{27}
+\bibcite{vapnik1995nature}{28}
+\bibcite{vapnik1964note}{29}
+\bibcite{yin2014study}{30}
